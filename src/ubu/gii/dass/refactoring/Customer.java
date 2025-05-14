@@ -2,6 +2,7 @@ package ubu.gii.dass.refactoring;
 
 import java.util.*;
 
+
 public class Customer {
 	private String _name;
 	private List<Rental> _rentals;
@@ -20,25 +21,28 @@ public class Customer {
 	}
 
 	public String statement() {
+		return createStatementResult(new TextStatementFormatter());
+	}
+	
+	public String htmlStatement() {
+	    return createStatementResult(new HtmlStatementFormatter());
+	}
+
+	private String createStatementResult(StatementFormatter formatter) {
 		double totalAmount = 0;
 		int frequentRenterPoints = 0;
-		StringBuilder result = new StringBuilder("Rental Record for " + getName() + "\n");
+		StringBuilder result = new StringBuilder(formatter.header(getName()));
 
 		for (Rental each : _rentals) {
 			double thisAmount = each.getCharge();
 			frequentRenterPoints += each.getFrequentRenterPoints();
 
-			result.append("\t")
-			      .append(each.getMovie().getTitle())
-			      .append("\t")
-			      .append(thisAmount)
-			      .append("\n");
+			result.append(formatter.rentalLine(each.getMovie().getTitle(), thisAmount));
 
 			totalAmount += thisAmount;
 		}
 
-		result.append("Amount owed is ").append(totalAmount).append("\n");
-		result.append("You earned ").append(frequentRenterPoints).append(" frequent renter points");
+		result.append(formatter.footer(totalAmount, frequentRenterPoints));
 
 		return result.toString();
 	}
