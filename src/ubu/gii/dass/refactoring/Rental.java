@@ -1,4 +1,5 @@
 package ubu.gii.dass.refactoring;
+
 /**
  * Tema Refactorizaciones
  * 
@@ -27,38 +28,11 @@ public class Rental {
 		return _movie;
 	}
 
-	/**
-	 * @param result
-	 * @return
-	 */
 	public double getCharge() {
-		double result = 0;
-		switch (getMovie().getPriceCode()) {
-		case Movie.REGULAR:
-			result += 2;
-			if (getDaysRented() > 2)
-				result += (getDaysRented() - 2) * 1.5;
-			break;
-		case Movie.NEW_RELEASE:
-			result += getDaysRented() * 3;
-			break;
-		case Movie.CHILDRENS:
-			result += 1.5;
-			if (getDaysRented() > 3)
-				result += (getDaysRented() - 3) * 1.5;
-			break;
-		}
-		return result;
+		return _movie.getCharge(_daysRented);
 	}
 
-	public int getFrecuentPoints() {
-		int frequentRenterPoints=1;
-				
-		// add bonus for a two day new release rental
-		if ((getMovie().getPriceCode() == Movie.NEW_RELEASE)
-				&& getDaysRented() > 1)
-			frequentRenterPoints++;
-		return frequentRenterPoints;
+	public int getFrequentRenterPoints() {
+		return _movie.getFrequentRenterPoints(_daysRented);
 	}
-
 }
